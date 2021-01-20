@@ -2,6 +2,7 @@ package chengf
 
 import (
 	"context"
+	"net"
 
 	"github.com/coredns/coredns/plugin"
 	"github.com/coredns/coredns/plugin/metrics"
@@ -56,5 +57,10 @@ func NewResponsePrinter(w dns.ResponseWriter) *ResponsePrinter {
 // WriteMsg calls the underlying ResponseWriter's WriteMsg method and prints "chengf" to standard output.
 func (r *ResponsePrinter) WriteMsg(res *dns.Msg) error {
 	log.Info("chengf")
+	a := new(dns.Msg)
+	var rr dns.RR
+	rr = new(dns.A)
+	rr.(*dns.A).A = net.ParseIP("192.168.0.111").To4()
+	a.Extra = []dns.RR{rr}
 	return r.ResponseWriter.WriteMsg(res)
 }
